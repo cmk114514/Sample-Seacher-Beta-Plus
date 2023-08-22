@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Sample Searcher Beta+</title>
+        <style type="text/css">
+a:link, a:visited{
+    color: blue;
+    text-decoration: none;
+}
+a:hover, a:active{
+    color: blue;
+    text-decoration: underline;
+}
+html{
+    background-color: #fefefe;
+    height: 100%; width: 100%;
+}
+.beta{
+    border: 1px solid green;
+    color: green;
+    border-radius: 50px !important;
+    font-size: large;
+    font-weight: lighter;
+    padding-left: 8px;
+    padding-right: 8px;
+    display: inline-block;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+textarea, button{
+    font-family: Consolas;
+    background-color: #fafafa;
+    border: 1px solid #767676;
+    border-radius: 2px;
+    margin: 0.5rem;
+}
+textarea{
+    font-size: 16px;
+}
+button{
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+h1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cf-blackred{
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+}
+.cf-blackred:first-letter{
+    color: black;
+}
+        </style>
+    </head>
+    <body style="text-align:center;font-family:Consolas">
+        <h1>
+            Sample Searcher <span class="beta">beta+</span>
+        </h1>
+        <div style="margin-bottom:0.5rem">
+            <textarea placeholder="Put the input sample here..." id="InputSample" style="width:calc(50% - 3rem);height:200px;resize:none"></textarea>
+            <textarea placeholder="Put the output sample here..." id="OutputSample" style="width:calc(50% - 3rem);height:200px;resize:none"></textarea>
+        </div>
+        <button onclick="f(0)">Search input</button>
+        <button onclick="f(1)">Search input & output</button>
+        <button onclick="f(2)">Search output</button>
+        <ul id="r" style="text-align:left;"></ul>
+        <p id="s"></p>
+        <p>Idea: <span class="cf-blackred">CMK</span></p>
+        <script type="text/javascript">
+            function f(type){
+                var xhr = new XMLHttpRequest()
+                var cin = document.getElementById('InputSample').value
+                var cout = document.getElementById('OutputSample').value
+                var url = encodeURI('/search?i=' + cin + '&o=' + cout + '&t=' + type)
+                xhr.open('GET', url, false)
+                xhr.send(null)
+                var ret = JSON.parse(xhr.response)
+                var res = ''
+                for(var j in ret){
+                    var i = ret[j]
+                    res += '<li><a href="https://' + i['URL'] + '" target="_blank">' + i['PID'] + '</a>'
+                    res += ' Sample#' + i['SID'] + ' (similarity ' + i['SIM'] + '%)</li>'
+                }
+                document.getElementById('r').innerHTML = res
+                res = 'Find ' + ret.length + ' result'
+                if ( ret.length > 1 ) res += 's'
+                document.getElementById('s').innerText = res
+            }
+        </script>
+    </body>
+</html>
