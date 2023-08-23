@@ -31,21 +31,23 @@ def search():
         for name in data[probset]:
             if type(data[probset][name]) is not list:
                 continue
+            i = 0
             for sam_li in data[probset][name]:
+                i += 1
                 try:
                     if len(sam_li[0]) <= MAXL and len(sam_li[1]) <= MAXL:
-                        v, cnt = 1, 0
+                        std, cio = '', ''
                         if checkIn:
-                            v *= simi(cin, sam_li[0]); cnt += 1
+                            std += sam_li[0] + '\0'; cio += cin + '\0'
                         if checkOut:
-                            v *= simi(cout, sam_li[1]); cnt += 1
-                        v **= 1 / cnt
+                            std += sam_li[1] + '\0'; cio += cout + '\0'
+                        v = simi(std, cio)
                         if int(v * 100) >= 80:
                             token = name.split(' ')
                             ret.append({
                                 'URL': data[probset]['URL'].format(*token).lower(),
                                 'PID': data[probset]['PID'].format(*token),
-                                'SIM': int(v * 100)
+                                'SID': i, 'SIM': int(v * 100), 
                             })
                 except Exception as e:
                     print(f'Error {e} | {probset} {name}')
