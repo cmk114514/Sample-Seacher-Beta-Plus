@@ -15,10 +15,6 @@ except:
 data['URL'] = "uoj.ac/problem/{0}"
 data['PID'] = "UOJ {0}"
 
-try:
-    os.mkdir('data/' + uoj_url)
-except Exception:
-    pass
 def get(pid):
     if f'{pid}' in data:
         return None
